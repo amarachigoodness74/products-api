@@ -1,13 +1,25 @@
 import { Request, Response } from "express";
 import Product from "../models/product.model";
+import Category from "../models/category.model";
+import Seller from "../models/seller.model";
+import generateLinks from "../utils";
 
 // GET: Fetch all products
 export const getProducts = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
+  let products;
   try {
-    const products = await Product.find();
+    const queryKeys = Object.keys(req.query)[0];
+
+    if (queryKeys && req.query[queryKeys]) {
+      products = await Product.find({
+        [`${queryKeys}`]: req.query[queryKeys],
+      }).lean();
+    } else {
+      products = await Product.find().lean();
+    }
     return res.status(200).json(products);
   } catch (error) {
     return res.status(500).json({ message: "Error fetching products", error });
@@ -20,11 +32,48 @@ export const getProductById = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).lean();
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    return res.status(200).json(product);
+    const category = await Category.findById(product.category).lean();
+    const seller = await Seller.findById(product.seller).lean();
+
+    const links: any = {
+      ...generateLinks("products", product._id as string),
+    };
+
+    let categoryList;
+    let sellerList;
+
+    // Add category link if category exists
+    if (category) {
+      categoryList = {
+        name: category.name,
+        href: `/categories/${category._id}`,
+      };
+      links.category = {
+        href: `/categories/${category._id}`,
+      };
+    }
+
+    // Add seller links if sellersexists
+    if (seller) {
+      sellerList = {
+        name: seller.name,
+        href: `/sellers/${seller._id}`,
+      };
+      links.seller = {
+        href: `/sellers/${seller._id}`,
+      };
+    }
+
+    return res.status(200).json({
+      product: {
+        product: { ...product, category: categoryList, seller: sellerList },
+        _links: links,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: "Error fetching product", error });
   }
