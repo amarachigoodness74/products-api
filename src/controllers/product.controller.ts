@@ -84,7 +84,7 @@ export const createProduct = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { name, quantity, price } = req.body;
+  const { name, quantity, price, seller, category } = req.body;
 
   if (!name || quantity == null || price == null) {
     return res
@@ -97,6 +97,8 @@ export const createProduct = async (
       name,
       quantity,
       price,
+      seller,
+      category,
     });
 
     const savedProduct = await newProduct.save();

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Category from "../models/category.model";
 import generateLinks from "../utils";
-import Product from "../models/product.model";
 
 // GET: Fetch all categories
 export const getCategories = async (

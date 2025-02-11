@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "NODE_ENV=test jest ./1server.test.ts ./2seller.test.ts ./3category.test.ts ./4product.test.ts --coverage --verbose",
     "dev": "nodemon ./src/server.ts",
     "build": "tsc",
     "start": "tsc && node dist/server.js"
@@ -23,7 +23,7 @@
     "@babel/register": "^7.24.6",
     "@types/chai": "^5.0.0",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/mocha": "^10.0.8",
     "@types/supertest": "^6.0.2",
     "chai": "^5.1.1",

@@ -228,6 +228,7 @@ Retrieve a list of categories
    ```bash
    npm run dev
    ```
+5. Run `npm test` or `yarn test` to run test files
 
 ## Technologies Used
 
@@ -239,6 +240,11 @@ Retrieve a list of categories
 ## Folder Structure
 
 ```
+__tests__/
+├── 1server.test.ts
+├── 2seller.test.ts
+├── 2category.test.ts
+├── 4product.test.ts
 src/
 ├── config/
 │   ├── dbConfig.ts
